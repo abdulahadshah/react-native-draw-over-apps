@@ -1,12 +1,25 @@
 import * as React from 'react';
 
-import { StyleSheet, View } from 'react-native';
-import { DrawOverAppsView } from 'react-native-draw-over-apps';
+import { Button, StyleSheet, View } from 'react-native';
+import { useDrawOverApps, askForPermission } from 'react-native-draw-over-apps';
 
 export default function App() {
+  const { createOverlay } = useDrawOverApps();
+
+  async function createOverlayWithPermissions() {
+    try {
+      const isGranted = await askForPermission();
+      if (isGranted) {
+        createOverlay();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <DrawOverAppsView color="#32a852" style={styles.box} />
+      <Button title="Create Overlay" onPress={createOverlayWithPermissions} />
     </View>
   );
 }
